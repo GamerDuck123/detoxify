@@ -1,0 +1,7 @@
+name: '${name}'
+main: '${group}.${mainFile}'
+
+version: '${version}'
+api-version: '${apiVersion}'
+description: '${description}'
+loader: 'me.gamerduck.detoxify.DetoxifyPluginLoader'

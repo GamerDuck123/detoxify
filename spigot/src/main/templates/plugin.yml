@@ -1,0 +1,16 @@
+name: '${name}'
+main: '${group}.${mainFile}'
+
+version: '${version}'
+description: '${description}'
+api-version: '${apiVersion}'
+
+libraries:
+  - ai.djl.huggingface:tokenizers:0.25.0
+  - com.microsoft.onnxruntime:onnxruntime:1.19.0
+  - org.spongepowered:configurate-hocon:4.2.0
+
+commands:
+  detoxifyreload:
+    description: Reloads the detoxify config
+    usage: /detoxifyreload
