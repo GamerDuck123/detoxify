@@ -31,7 +31,7 @@ public class ConfigManager {
 
             // ✅ Copy from JAR if missing
             if (Files.notExists(configPath)) {
-                try (InputStream in = classLoader.getResourceAsStream("config.conf")) {
+                try (InputStream in = classLoader.getResourceAsStream("detoxify.conf")) {
                     if (in != null) {
                         Files.copy(in, configPath);
                         System.out.println("[Detoxify] Default config copied from JAR.");

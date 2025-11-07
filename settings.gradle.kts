@@ -1,5 +1,5 @@
 rootProject.name = "Detoxify"
-include("common", "paper", "fabric", "neoforge", "spigot", "bungeecord", "velocity")
+include("common", "paper", "fabric", "neoforge", "spigot")
 
 pluginManagement {
     plugins {

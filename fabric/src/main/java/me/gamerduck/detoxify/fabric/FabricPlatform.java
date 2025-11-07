@@ -18,7 +18,7 @@ import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
 public class FabricPlatform extends Platform<ServerPlayer> {
 
-    private static final Path modFolder = Path.of("/config/Detoxify");
+    private static final Path modFolder = Path.of("config/Detoxify");
     public static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger("detoxify");
     private MinecraftServer minecraftServer;
 
@@ -27,6 +27,7 @@ public class FabricPlatform extends Platform<ServerPlayer> {
         this.minecraftServer = minecraftServer;
 
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((server, player, message) -> !onChatEvent(message.toString(), player));
+        ServerMessageEvents.ALLOW_COMMAND_MESSAGE.register((server, player, message) -> player.isPlayer() ? !onChatEvent(message.toString(), player.getPlayer()) : true);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             if (environment == Commands.CommandSelection.DEDICATED) {

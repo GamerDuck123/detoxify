@@ -24,6 +24,7 @@ public class Config {
     public static class Messages {
         public String player = "§cYour message was removed for violating chat rules.";
         public String staff = "%s's message has been removed [%s]";
+        public String console = "%s's message has been removed [%s]";
     }
 
     @ConfigSerializable

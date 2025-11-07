@@ -2,7 +2,8 @@ import net.neoforged.nfrtgradle.CreateMinecraftArtifacts
 dependencies {
     compileOnly(libs.onnxruntime)
     compileOnly(libs.tokenizers)
-    compileOnly(libs.configurate)
+    compileOnly(libs.configurate.core)
+    compileOnly(libs.configurate.hocon)
 }
 
 neoForge {

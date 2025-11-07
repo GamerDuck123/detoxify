@@ -19,12 +19,6 @@ allprojects {
             apply(plugin = "hangar-plugin")
         }
 
-        if (this.name == "velocity") {
-            apply(plugin = "velocity-plugin")
-            apply(plugin = "modrinth-plugin")
-            apply(plugin = "hangar-plugin")
-        }
-
         if (this.name == "fabric") {
             apply(plugin = "fabric-plugin")
             apply(plugin = "modrinth-plugin")
@@ -42,13 +36,6 @@ allprojects {
         if (this.name == "spigot") {
             apply(plugin = "spigot-plugin")
             apply(plugin = "modrinth-plugin")
-        }
-
-        if (this.name == "bungeecord") {
-            apply(plugin = "bungeecord-plugin")
-            apply(plugin = "modrinth-plugin")
-            // Waterfall?
-            apply(plugin = "hangar-plugin")
         }
 
         if (this.name == "common") {

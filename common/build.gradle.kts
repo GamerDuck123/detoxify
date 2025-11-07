@@ -7,7 +7,7 @@ dependencies {
 
     compileOnly(libs.onnxruntime)
     compileOnly(libs.tokenizers)
-    implementation(libs.configurate)
+    implementation(libs.configurate.hocon)
 }
 
 neoForge {

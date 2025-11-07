@@ -7,7 +7,8 @@ dependencies {
     compileOnly(libs.skript)
     compileOnly(libs.onnxruntime)
     compileOnly(libs.tokenizers)
-    compileOnly(libs.configurate)
+    compileOnly(libs.configurate.core)
+    compileOnly(libs.configurate.hocon)
 }
 
 modrinth {
@@ -88,10 +89,10 @@ tasks {
     processResources {
         dependsOn("copyCommonSources")
         val props = mapOf(
-            "name" to project.name,
+            "name" to rootProject.name,
             "group" to project.group,
             "version" to project.version,
-            "mainFile" to "${project.name}Plugin",
+            "mainFile" to "${project.rootProject}Plugin",
             "description" to project.description,
             "apiVersion" to libs.versions.minecraft.get()
         )

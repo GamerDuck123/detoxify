@@ -7,7 +7,8 @@ dependencies {
     compileOnly(libs.skript)
     compileOnly(libs.onnxruntime)
     compileOnly(libs.tokenizers)
-    compileOnly(libs.configurate)
+    compileOnly(libs.configurate.core)
+    compileOnly(libs.configurate.hocon)
 }
 
 modrinth {

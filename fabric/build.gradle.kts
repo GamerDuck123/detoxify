@@ -8,12 +8,20 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modImplementation("${libs.fabric.api.get()}+${libs.versions.minecraft.get()}")
 
-    modImplementation(libs.onnxruntime)
+    implementation(libs.onnxruntime)
+    implementation(libs.tokenizers)
+    implementation(libs.configurate.core)
+    implementation(libs.configurate.hocon)
+
+    // Include them in the final mod JAR
     include(libs.onnxruntime)
-    modImplementation(libs.tokenizers)
     include(libs.tokenizers)
-    modImplementation(libs.configurate)
-    include(libs.configurate)
+    include(libs.configurate.core)
+    include(libs.configurate.hocon)
+    include(libs.option)
+    include(libs.geantyref)
+    include(libs.checkerQual)
+    include(libs.djl.api)
 }
 
 modrinth {
