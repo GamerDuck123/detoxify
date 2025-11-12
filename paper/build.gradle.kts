@@ -1,5 +1,9 @@
 import io.papermc.hangarpublishplugin.model.Platforms
-
+plugins {
+    id("paper-plugin")
+    id("modrinth-plugin")
+    id("hangar-plugin")
+}
 dependencies {
     paperweight.paperDevBundle("${libs.versions.minecraft.get()}-R0.1-SNAPSHOT")
     compileOnly(libs.brigadier)
@@ -9,32 +13,6 @@ dependencies {
     compileOnly(libs.tokenizers)
     compileOnly(libs.configurate.core)
     compileOnly(libs.configurate.hocon)
-}
-
-modrinth {
-    uploadFile.set(tasks.jar)
-    gameVersions.addAll(libs.versions.minecraft.get())
-}
-
-
-hangarPublish {
-    publications.register("plugin") {
-        version.set(project.version as String)
-        channel.set(property("versionType") as String)
-        id.set(property("hangarID") as String)
-        apiKey.set(System.getenv("HANGAR_API_TOKEN"))
-        changelog.set(rootProject.file("CHANGELOG.md").readText())
-        platforms {
-            register(Platforms.PAPER) {
-                jar.set(tasks.jar.flatMap { it.archiveFile })
-
-                val versions: List<String> = (libs.versions.minecraft.get())
-                    .split(",")
-                    .map { it.trim() }
-                platformVersions.set(versions)
-            }
-        }
-    }
 }
 
 tasks.register<Copy>("copyCommonSources") {

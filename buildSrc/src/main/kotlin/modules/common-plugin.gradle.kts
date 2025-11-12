@@ -8,6 +8,7 @@ plugins {
 repositories {
     maven("https://libraries.minecraft.net")
 }
+
 tasks.withType<JavaCompile>().configureEach {
     enabled = false
 }

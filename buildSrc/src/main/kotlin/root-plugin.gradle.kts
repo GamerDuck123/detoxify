@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+base {
+    archivesName.set("${rootProject.name}-${project.name}")
+}
+
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of("21"))
 }

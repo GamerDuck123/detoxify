@@ -1,5 +1,9 @@
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.exclude
+plugins {
+    id("spigot-plugin")
+    id("modrinth-plugin")
+}
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:${libs.versions.minecraft.get()}-R0.1-SNAPSHOT")
@@ -9,11 +13,6 @@ dependencies {
     compileOnly(libs.tokenizers)
     compileOnly(libs.configurate.core)
     compileOnly(libs.configurate.hocon)
-}
-
-modrinth {
-    uploadFile.set(tasks.shadowJar)
-    gameVersions.addAll(libs.versions.minecraft.get())
 }
 
 tasks.register<Copy>("copyCommonSources") {

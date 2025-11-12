@@ -1,4 +1,10 @@
 import net.neoforged.nfrtgradle.CreateMinecraftArtifacts
+plugins {
+    id("neoforge-plugin")
+    id("modrinth-plugin")
+    id("curseforge-plugin")
+}
+
 dependencies {
     compileOnly(libs.onnxruntime)
     compileOnly(libs.tokenizers)
@@ -19,23 +25,6 @@ neoForge {
             sourceSet(sourceSets.main.get())
         }
     }
-}
-modrinth {
-    uploadFile.set(tasks.jar)
-    gameVersions.addAll(libs.versions.minecraft.get())
-}
-
-tasks.register("publishCurseForge", net.darkhax.curseforgegradle.TaskPublishCurseForge::class) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
-
-    val projectId = findProperty("curseforgeID") as String?
-
-    val mainFile = upload(projectId, tasks.jar)
-    mainFile.addModLoader("NeoForge")
-    mainFile.addGameVersion(libs.versions.minecraft.get())
-    mainFile.releaseType = property("versionType") as String
-    mainFile.displayName = "${project.version as String}-${project.name}"
-    mainFile.changelog = rootProject.file("CHANGELOG.md").readText()
 }
 
 val localRuntime: Configuration by configurations.creating
