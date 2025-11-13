@@ -9,14 +9,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class SpigotPlatform extends Platform<Player> {
-    private final JavaPlugin bootstrap;
+import java.util.logging.Logger;
+
+public class SpigotPlatform extends Platform<Player> implements Listener {
+    private static final Logger LOGGER = Logger.getLogger("Detoxify");
 
     public SpigotPlatform(JavaPlugin bootstrap) throws Exception {
         super(bootstrap.getDataFolder().toPath(), bootstrap.getDataFolder().toPath().resolve("libs"), bootstrap.getDataFolder().toPath().resolve("maps"));
-        this.bootstrap = bootstrap;
 
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
@@ -34,7 +36,7 @@ public class SpigotPlatform extends Platform<Player> {
         });
 
         if (Bukkit.getPluginManager().getPlugin("Skript") != null) {
-            bootstrap.getLogger().info("Skript found, enabling addon");
+            LOGGER.info("Skript found, enabling addon");
             SkriptAddon addon = Skript.registerAddon(bootstrap);
             addon.loadClasses("me.gamerduck.detoxify.spigot.support.skript");
         }
@@ -60,6 +62,15 @@ public class SpigotPlatform extends Platform<Player> {
 
     @Override
     public void sendConsoleMessage(String consoleMessage) {
-        bootstrap.getLogger().info(consoleMessage);
+        LOGGER.info(consoleMessage);
+    }
+
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (event.getPlayer().hasPermission("detoxify.admin")) {
+            String message = getUpdateMessage();
+            if (message != null) event.getPlayer().sendMessage(message);
+        }
     }
 }

@@ -1,8 +1,6 @@
 import net.neoforged.nfrtgradle.CreateMinecraftArtifacts
 plugins {
     id("neoforge-plugin")
-    id("modrinth-plugin")
-    id("curseforge-plugin")
 }
 
 dependencies {
@@ -36,6 +34,13 @@ configurations {
 tasks.register<Copy>("copyCommonSources") {
     from("$rootDir/common/src/main/java") {
         into("common/java")
+
+        filter { line: String ->
+            line.replace("@version@", project.version.toString())
+        }
+        filter { line: String ->
+            line.replace("@modrinthToken@", project.property("modrinthID") as String)
+        }
     }
     from("$rootDir/common/src/main/resources") {
         exclude("${project.property("modid")}.accesswidener")

@@ -18,9 +18,10 @@ allprojects {
 
 tasks {
     publish {
-        dependsOn(subprojects.filter { it.name in listOf("paper", "fabric", "neoforge", "spigot", "bungeecord", "velocity") }.map { it.tasks.named("modrinth") })
-        dependsOn(subprojects.filter { it.name in listOf("paper", "bungeecord", "velocity") }.map { it.tasks.named("publishPluginPublicationToHangar") })
+        dependsOn(subprojects.filter { it.name in listOf("paper", "fabric", "neoforge", "spigot") }.map { it.tasks.named("modrinth") })
+        dependsOn(subprojects.filter { it.name in listOf("paper") }.map { it.tasks.named("publishPluginPublicationToHangar") })
         dependsOn(subprojects.filter { it.name in listOf("fabric", "neoforge") }.map { it.tasks.named("publishCurseForge") })
+        dependsOn(subprojects.filter { it.name in listOf("paper", "fabric", "neoforge", "spigot") }.map { it.tasks.named("githubRelease") })
     }
 
     assemble {

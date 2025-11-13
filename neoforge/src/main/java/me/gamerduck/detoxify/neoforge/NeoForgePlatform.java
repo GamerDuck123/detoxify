@@ -1,5 +1,6 @@
 package me.gamerduck.detoxify.neoforge;
 
+import com.mojang.logging.LogUtils;
 import me.gamerduck.detoxify.Platform;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -8,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
-import net.neoforged.neoforge.event.server.ServerLifecycleEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ public class NeoForgePlatform extends Platform<ServerPlayer> {
 
     private static final Path modFolder = Path.of("/mods/Detoxify");
     private MinecraftServer minecraftServer;
+    public static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger("detoxify");
 
     public NeoForgePlatform() throws Exception {
         super(modFolder, modFolder.resolve("libs"), modFolder.resolve("maps"));
@@ -44,6 +46,14 @@ public class NeoForgePlatform extends Platform<ServerPlayer> {
         event.setCanceled(onChatEvent(event.getRawText(), event.getPlayer()));
     }
 
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity().getPermissionLevel() >= 4) {
+            String message = getUpdateMessage();
+            if (message != null) ((ServerPlayer) event.getEntity()).sendSystemMessage(Component.literal(message));
+        }
+    }
+
     @Override
     public void sendPlayerMessage(ServerPlayer player, String playerMessage) {
         player.sendSystemMessage(Component.literal(playerMessage));
@@ -64,6 +74,6 @@ public class NeoForgePlatform extends Platform<ServerPlayer> {
 
     @Override
     public void sendConsoleMessage(String consoleMessage) {
-        DetoxifyMod.LOGGER.info(consoleMessage);
+        LOGGER.info(consoleMessage);
     }
 }

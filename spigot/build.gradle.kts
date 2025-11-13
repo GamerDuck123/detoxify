@@ -2,7 +2,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.exclude
 plugins {
     id("spigot-plugin")
-    id("modrinth-plugin")
 }
 
 dependencies {
@@ -19,6 +18,13 @@ tasks.register<Copy>("copyCommonSources") {
     from("$rootDir/common/src/main/java") {
         exclude("me/gamerduck/${rootProject.property("modid")}/mixin/**")
         into("common/java")
+
+        filter { line: String ->
+            line.replace("@version@", project.version.toString())
+        }
+        filter { line: String ->
+            line.replace("@modrinthToken@", project.property("modrinthID") as String)
+        }
     }
     from("$rootDir/common/src/main/resources") {
         exclude("META-INF/**")

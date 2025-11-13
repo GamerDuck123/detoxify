@@ -32,14 +32,14 @@ public class FabricClientPlatform extends Platform<Player> {
 
         ClientReceiveMessageEvents.ALLOW_CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
             if (checkMessage(message.getString())) {
-                sendConsoleMessage(String.format(consoleMessage(), sender.name() == null ? "System" : sender.name(), message));
+                sendConsoleMessage(String.format(config.consoleMessage(), sender.name() == null ? "System" : sender.name(), message));
                 return false;
             }
             return true;
         });
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, signedMessage) -> {
             if (checkMessage(message.getString())) {
-                sendConsoleMessage(String.format(consoleMessage(), "System", message));
+                sendConsoleMessage(String.format(config.consoleMessage(), "System", message));
                 return false;
             }
             return true;
@@ -47,8 +47,8 @@ public class FabricClientPlatform extends Platform<Player> {
 
         ClientSendMessageEvents.ALLOW_CHAT.register(message -> {
             if (checkMessage(message)) {
-                sendConsoleMessage(String.format(consoleMessage(), "Me, why are you cussing", message));
-                sendPlayerMessage(minecraftClient.player, String.format(playerMessage(), "Local", message));
+                sendConsoleMessage(String.format(config.consoleMessage(), "Me, why are you cussing", message));
+                sendPlayerMessage(minecraftClient.player, String.format(config.playerMessage(), "Local", message));
                 return false;
             }
             return true;

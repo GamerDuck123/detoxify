@@ -1,8 +1,6 @@
 import io.papermc.hangarpublishplugin.model.Platforms
 plugins {
     id("paper-plugin")
-    id("modrinth-plugin")
-    id("hangar-plugin")
 }
 dependencies {
     paperweight.paperDevBundle("${libs.versions.minecraft.get()}-R0.1-SNAPSHOT")
@@ -19,6 +17,13 @@ tasks.register<Copy>("copyCommonSources") {
     from("$rootDir/common/src/main/java") {
         exclude("me/gamerduck/${project.property("modid")}/mixin/**")
         into("common/java")
+
+        filter { line: String ->
+            line.replace("@version@", project.version.toString())
+        }
+        filter { line: String ->
+            line.replace("@modrinthToken@", project.property("modrinthID") as String)
+        }
     }
     from("$rootDir/common/src/main/resources") {
         exclude("META-INF/**")
@@ -70,7 +75,7 @@ tasks {
             "name" to rootProject.name,
             "group" to project.group,
             "version" to project.version,
-            "mainFile" to "${project.rootProject}Plugin",
+            "mainFile" to "${rootProject.name}Plugin",
             "description" to project.description,
             "apiVersion" to libs.versions.minecraft.get()
         )

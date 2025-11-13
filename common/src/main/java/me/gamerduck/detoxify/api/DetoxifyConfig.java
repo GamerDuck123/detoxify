@@ -3,6 +3,7 @@ package me.gamerduck.detoxify.api;
 import me.gamerduck.detoxify.Platform;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,9 +34,11 @@ public class DetoxifyConfig {
     private final Platform platform;
 
     private static final boolean DEFAULT_DEBUG = false;
-    private static final String DEFAULT_PLAYER_MESSAGE = "§cYour message was removed for violating chat rules.";
-    private static final String DEFAULT_STAFF_MESSAGE = "%s's message has been removed [%s]";
-    private static final String DEFAULT_CONSOLE_MESSAGE = "%s's message has been removed [%s]";
+    private static final boolean DEFAULT_UPDATE_CHECKS = true;
+
+    private static final String DEFAULT_PLAYER_MESSAGE = "\u00A7cYour message was removed for violating chat rules.";
+    private static final String DEFAULT_STAFF_MESSAGE = "\u00A7c%s's message has been removed [%s]";
+    private static final String DEFAULT_CONSOLE_MESSAGE = "\u00A7c%s's message has been removed [%s]";
     private static final double DEFAULT_TOXICITY = 0.9;
     private static final double DEFAULT_SEVERE_TOXICITY = 0.5;
     private static final double DEFAULT_OBSCENE = 0.25;
@@ -90,7 +93,7 @@ public class DetoxifyConfig {
             properties.clear();
             comments.clear();
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_16))) {
                 String line;
                 String lastComment = null;
 
@@ -126,7 +129,6 @@ public class DetoxifyConfig {
                         properties.put(key, defaults.get(key));
                         comments.put(key, defaultComments.get(key));
                         configChanged = true;
-                        platform.sendConsoleMessage("Added new config option: " + key);
                     }
                 }
 
@@ -136,7 +138,6 @@ public class DetoxifyConfig {
                         filtered.put(entry.getKey(), entry.getValue());
                     } else {
                         configChanged = true;
-                        platform.sendConsoleMessage("Removed deprecated config option: " + entry.getKey());
                     }
                 }
 
@@ -206,6 +207,7 @@ public class DetoxifyConfig {
                 + "#                                  #\n"
                 + "####################################");
         setProperty("debug", String.valueOf(DEFAULT_DEBUG), "Whether or not there should be debug message");
+        setProperty("check-updates", String.valueOf(DEFAULT_UPDATE_CHECKS), "Check for updates and notify staff (and console) on join who have the permission alwaysauth.admin");
 
         addComment("\n############################\n"
                 + "#      Value Settings      #\n"
@@ -280,7 +282,7 @@ public class DetoxifyConfig {
      * </p>
      */
     public void saveConfig() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(configFile), StandardCharsets.UTF_8))) {
             for (Map.Entry<String, String> entry : properties.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
@@ -323,6 +325,14 @@ public class DetoxifyConfig {
      */
     public Boolean debug() {
         return Boolean.parseBoolean(properties.getOrDefault("debug", String.valueOf(DEFAULT_DEBUG)));
+    }
+    /**
+     * Checks if updates are enabled.
+     *
+     * @return true if updates are enabled, false otherwise
+     */
+    public Boolean updates() {
+        return Boolean.parseBoolean(properties.getOrDefault("check-updates", String.valueOf(DEFAULT_UPDATE_CHECKS)));
     }
 
     /**

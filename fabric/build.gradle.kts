@@ -1,7 +1,5 @@
 plugins {
     id("fabric-plugin")
-    id("modrinth-plugin")
-    id("curseforge-plugin")
 }
 
 dependencies {
@@ -33,6 +31,13 @@ dependencies {
 tasks.register<Copy>("copyCommonSources") {
     from("$rootDir/common/src/main/java") {
         into("common/java")
+
+        filter { line: String ->
+            line.replace("@version@", project.version.toString())
+        }
+        filter { line: String ->
+            line.replace("@modrinthToken@", project.property("modrinthID") as String)
+        }
     }
 
 

@@ -1,7 +1,9 @@
 package me.gamerduck.detoxify.fabric;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.network.chat.Component;
 
 public class DetoxifyMod  implements ModInitializer {
 
@@ -17,6 +19,13 @@ public class DetoxifyMod  implements ModInitializer {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+            }
+        });
+
+        ServerPlayerEvents.JOIN.register(player -> {
+            if (player.getPermissionLevel() >= 4) {
+                String message = fabricPlatform.getUpdateMessage();
+                if (message != null) player.sendSystemMessage(Component.literal(message));
             }
         });
     }

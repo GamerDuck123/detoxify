@@ -12,17 +12,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.logging.Logger;
 
-public class PaperPlatform extends Platform<Player> {
+public class PaperPlatform extends Platform<Player> implements Listener {
 
-    private final JavaPlugin plugin;
+    private static final Logger LOGGER = Logger.getLogger("Detoxify");
     public PaperPlatform(Path platformFolder, Path libsFolder, Path mapsFolder, JavaPlugin plugin) throws Exception {
         super(platformFolder, libsFolder, mapsFolder);
-        this.plugin = plugin;
 
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
@@ -43,7 +44,7 @@ public class PaperPlatform extends Platform<Player> {
 
 
         if (Bukkit.getPluginManager().getPlugin("Skript") != null) {
-            plugin.getLogger().info("Skript found, enabling addon");
+            LOGGER.info("Skript found, enabling addon");
             SkriptAddon addon = Skript.registerAddon(plugin);
             try {
                 addon.loadClasses("me.gamerduck.detoxify.paper.support.skript");
@@ -73,6 +74,14 @@ public class PaperPlatform extends Platform<Player> {
 
     @Override
     public void sendConsoleMessage(String consoleMessage) {
-        plugin.getLogger().info(consoleMessage);
+        LOGGER.info(consoleMessage);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (event.getPlayer().hasPermission("detoxify.admin")) {
+            String message = getUpdateMessage();
+            if (message != null) event.getPlayer().sendMessage(message);
+        }
     }
 }

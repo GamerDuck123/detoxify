@@ -1,3 +1,4 @@
+> I have opened a support discord, join now! https://discord.gg/uHm8EbfCFr
 # Detoxify
 
 **Detoxify** is a lightweight yet powerful AI chat moderation tool that classifies messages into multiple categories, allowing you to finely tune what gets caught by the filter. Despite its performance, it uses **less than 150MB of RAM**, making it extremely efficient for both server and client use.
@@ -41,32 +42,46 @@ These scores allow you to configure thresholds and customize exactly which messa
 
 ---
 
+### Permissions
+> This is only on paper and spigot, on fabric and neoforge you need to be op
+
+1. detoxify.notify -> Gives you permissions to receive notifications when a player is flagged.
+2. detoxify.admin -> Gives you permission to receive update notifications
+
+---
+
 ### Configuration Options
 
 This configuration works for both client and server. It allows fine-tuning of message thresholds and debug options:
 
-```hocon
-# Enables debug mode for message computation and threshold tuning
-debug {
-  enabled = false
-}
+```properties
+####################################
+#                                  #
+#      Detoxify Configuration      #
+#                                  #
+####################################
 
-# Custom messages displayed when a message is blocked
-messages {
-  player = "§cYour message was removed for violating chat rules."
-  staff = "%s's message has been removed [%s]"
-  console = "%s's message has been removed [%s]"
-}
+# Whether or not there should be debug message
+debug=false
 
-# Threshold values for AI classification categories
-values {
-  toxicity = 0.9
-  severe-toxicity = 0.5
-  obscene = 0.25
-  threat = -1
-  insult = -1
-  identity-attack = -1
-}
+############################
+#      Value Settings      #
+############################
+
+toxicity=0.9
+severe-toxicity=0.5
+obscene=0.25
+threat=-1.0
+insult=-1.0
+identity-attack=-1.0
+
+############################
+#     Message Settings     #
+############################
+
+player=§cYour message was removed for violating chat rules.
+staff=§c%s's message has been removed [%s]
+console=§c%s's message has been removed [%s]
 ```
 
 ---

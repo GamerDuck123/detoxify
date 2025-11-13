@@ -13,6 +13,7 @@ public class DetoxifyPlugin extends JavaPlugin {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        this.getServer().getPluginManager().registerEvents(paperPlatform, this);
     }
 
     public static PaperPlatform skriptOnly$paperPlatform() {

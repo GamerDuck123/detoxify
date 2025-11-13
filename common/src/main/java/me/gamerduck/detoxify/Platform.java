@@ -2,6 +2,7 @@ package me.gamerduck.detoxify;
 
 import me.gamerduck.detoxify.api.DetoxifyConfig;
 import me.gamerduck.detoxify.api.DetoxifyONNX;
+import me.gamerduck.detoxify.api.updates.ModrinthUpdateChecker;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,11 +15,11 @@ import java.util.Map;
 
 public abstract class Platform<P> {
 
-    private DetoxifyConfig config;
-    private final Path platformFolder;
-    private final Path libsFolder;
-    private final Path mapsFolder;
-    private final DetoxifyONNX mod;
+    protected DetoxifyConfig config;
+    protected final Path platformFolder;
+    protected final Path libsFolder;
+    protected final Path mapsFolder;
+    protected final DetoxifyONNX mod;
 
     public Platform(Path platformFolder, Path libsFolder, Path mapsFolder) throws Exception {
         this.platformFolder = platformFolder;
@@ -32,15 +33,15 @@ public abstract class Platform<P> {
                 if (!Files.exists(libsFolder.resolve("detoxify_quantized.onnx"))) {
                     URL url = new URL("https://github.com/GamerDuck123/detoxify/releases/download/model-download-1.0.0/detoxify_quantized.onnx");
                     Path dest = libsFolder.resolve("detoxify_quantized.onnx");
-                    System.out.println("Downloading Detoxify model...");
+                    sendConsoleMessage("Downloading Detoxify model...");
                     try (InputStream in = url.openStream()) {
                         Files.createDirectories(dest.getParent());
                         Files.copy(in, dest);
                     }
                     String expectedSHA = "7f62ab0b50c1c4050617b8842efbf7e71ab90e382a5e8e141494d378fdf53740";
-                    System.out.println("Ensuring download integrity...");
+                    sendConsoleMessage("Ensuring download integrity...");
                     if (verifySHA(dest, expectedSHA)) {
-                        System.out.println("Model downloaded successfully!");
+                        sendConsoleMessage("Model downloaded successfully!");
                     } else {
                         throw new MatchException("The SHA256 does not match, please contact GamerDuck123", new RuntimeException());
                     }
@@ -48,15 +49,15 @@ public abstract class Platform<P> {
                 if (!Files.exists(libsFolder.resolve("tokenizer.json"))) {
                     URL url = new URL("https://github.com/GamerDuck123/detoxify/releases/download/model-download-1.0.0/tokenizer.json");
                     Path dest = libsFolder.resolve("tokenizer.json");
-                    System.out.println("Downloading Detoxify's tokenizer.json...");
+                    sendConsoleMessage("Downloading Detoxify's tokenizer.json...");
                     try (InputStream in = url.openStream()) {
                         Files.createDirectories(dest.getParent());
                         Files.copy(in, dest);
                     }
                     String expectedSHA = "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66";
-                    System.out.println("Ensuring download integrity...");
+                    sendConsoleMessage("Ensuring download integrity...");
                     if (verifySHA(dest, expectedSHA)) {
-                        System.out.println("Tokenizer downloaded successfully!");
+                        sendConsoleMessage("Tokenizer downloaded successfully!");
                     } else {
                         throw new MatchException("The SHA256 does not match, please contact GamerDuck123", new RuntimeException());
                     }
@@ -66,6 +67,8 @@ public abstract class Platform<P> {
             }
         }
         mod = new DetoxifyONNX(libsFolder.resolve("detoxify_quantized.onnx").toString(), this);
+        String message = getUpdateMessage();
+        if (message != null) sendConsoleMessage(message);
     }
 
 
@@ -90,6 +93,20 @@ public abstract class Platform<P> {
     public abstract String getPlayerName(P player);
     public abstract void sendAllStaffMessage(P offendingPlayer, String staffMessage);
     public abstract void sendConsoleMessage(String consoleMessage);
+
+    /**
+     * Gets the update message if updates is enabled and there is a new update available.
+     *
+     * @return the update message
+     */
+    public String getUpdateMessage() {
+        if (config.updates() && ModrinthUpdateChecker.hasNewer()) {
+            return "\u00A7cHey there is a new update for Detoxify! " +
+                    "\u00A7cPlease update soon for the latest and best features! https://modrinth.com/plugin/detoxify/versions";
+        } else {
+            return null;
+        }
+    }
 
     public void reload() {
         config = new DetoxifyConfig(platformFolder.toFile(), this);

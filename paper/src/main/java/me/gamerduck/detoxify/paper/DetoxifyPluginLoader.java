@@ -17,7 +17,7 @@ public class DetoxifyPluginLoader implements PluginLoader {
         resolver.addDependency(new Dependency(new DefaultArtifact("com.microsoft.onnxruntime:onnxruntime:1.19.0"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("org.spongepowered:configurate-hocon:4.2.0"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("org.spongepowered:configurate-core:4.2.0"), null));
-        resolver.addRepository(new RemoteRepository.Builder("central", "default", "https://repo1.maven.org/maven2").build());
+        resolver.addRepository(new RemoteRepository.Builder("central", "default", MavenLibraryResolver.MAVEN_CENTRAL_DEFAULT_MIRROR).build());
 
         classpathBuilder.addLibrary(resolver);
     }

@@ -1,5 +1,6 @@
 package me.gamerduck.detoxify.neoforge.client;
 
+import com.mojang.logging.LogUtils;
 import me.gamerduck.detoxify.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,6 +18,8 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 
@@ -24,6 +27,7 @@ public class NeoForgeClientPlatform extends Platform<Player> {
 
     private static final Path modFolder = Path.of("config/Detoxify");
     private Minecraft minecraftClient;
+    public static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger("detoxify");
 
     public NeoForgeClientPlatform() throws Exception {
         super(modFolder, modFolder.resolve("libs"), modFolder.resolve("maps"));
@@ -48,7 +52,7 @@ public class NeoForgeClientPlatform extends Platform<Player> {
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (checkMessage(event.getMessage().getString())) {
-            sendConsoleMessage(String.format(consoleMessage(), event.isSystem() ? "System" : event.getSender().toString(), event.getMessage().getString()));
+            sendConsoleMessage(String.format(config.consoleMessage(), event.isSystem() ? "System" : event.getSender().toString(), event.getMessage().getString()));
             event.setCanceled(true);
         }
     }
@@ -56,8 +60,8 @@ public class NeoForgeClientPlatform extends Platform<Player> {
     @SubscribeEvent
     public void onChatEvent(ClientChatEvent event) {
         if (checkMessage(event.getMessage())) {
-            sendConsoleMessage(String.format(consoleMessage(), "Me", event.getMessage()));
-            sendPlayerMessage(minecraftClient.player, String.format(playerMessage(), "Local", event.getMessage()));
+            sendConsoleMessage(String.format(config.consoleMessage(), "Me", event.getMessage()));
+            sendPlayerMessage(minecraftClient.player, String.format(config.playerMessage(), "Local", event.getMessage()));
             event.setCanceled(true);
         }
     }
@@ -78,6 +82,6 @@ public class NeoForgeClientPlatform extends Platform<Player> {
 
     @Override
     public void sendConsoleMessage(String consoleMessage) {
-        DetoxifyClientMod.LOGGER.info(consoleMessage);
+        LOGGER.info(consoleMessage);
     }
 }
